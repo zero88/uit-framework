@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.zero.selenium</groupId>
+		<artifactId>uit</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>drivers</artifactId>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-remote-resources-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>bundle</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includes>
+						<include>**/selenium_standalone_binaries/**</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.lazerycode.selenium</groupId>
+				<artifactId>driver-binary-downloader-maven-plugin</artifactId>
+				<version>${driver-binary-downloader-maven-plugin.version}</version>
+				<configuration>
+					<rootStandaloneServerDirectory>${project.basedir}/src/main/resources/selenium_standalone_binaries</rootStandaloneServerDirectory>
+					<downloadedZipFileDirectory>${project.basedir}/src/main/resources/selenium_standalone_zips</downloadedZipFileDirectory>
+					<customRepositoryMap>${project.basedir}/src/main/resources/RepositoryMap.xml</customRepositoryMap>
+					<overwriteFilesThatExist>${overwrite.binaries}</overwriteFilesThatExist>
+					<onlyGetDriversForHostOperatingSystem>false</onlyGetDriversForHostOperatingSystem>
+					<fileDownloadRetryAttempts>${retry.attempts}</fileDownloadRetryAttempts>
+					<fileDownloadReadTimeout>${read.timeout}</fileDownloadReadTimeout>
+					<operatingSystems>
+						<windows>true</windows>
+						<linux>true</linux>
+						<mac>true</mac>
+					</operatingSystems>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>selenium</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

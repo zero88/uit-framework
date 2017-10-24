@@ -1,0 +1,26 @@
+[
+	{
+		"name": "Update post",
+		"steps": [
+			{
+				"name": "Input Post Content",
+				"action": "inputPost",
+				"data": {
+					"title": "Zero v1",
+					"content": "###Zero remote fulltime contract"
+				}
+			},
+			{
+				"name": "Publish Post",
+				"action": "publishPost"
+			},
+			{
+				"name": "Unpublish and Delete Post",
+				"action": "searchAndDeletePost",
+				"data": {
+					"search": "Zero v1"
+				}
+			}
+		]
+	}
+]

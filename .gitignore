@@ -1,0 +1,7 @@
+**/.settings/
+**/.project
+**/.classpath
+**/local-configuration.properties
+**/selenium_standalone_binaries/
+**/selenium_standalone_zips/
+**/target/

@@ -1,0 +1,243 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.zero.selenium</groupId>
+		<artifactId>uit</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>ghost-test</artifactId>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<final.name>ghost-ui</final.name>
+		<ghost.product.name>Ghost</ghost.product.name>
+		<ghost.product.component>UITest</ghost.product.component>
+		<!--Dependency Versions -->
+		<selenium.version>3.4.0</selenium.version>
+		<hamcrest-all.version>1.3</hamcrest-all.version>
+		<phantomjsdriver.version>1.4.1</phantomjsdriver.version>
+		<testng.version>6.11</testng.version>
+		<log4j2.verion>2.8.1</log4j2.verion>
+		<!--Plugin Versions -->
+		<driver-binary-downloader-maven-plugin.version>1.0.14</driver-binary-downloader-maven-plugin.version>
+		<maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
+		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
+		<!--Configuration Properties -->
+		<overwrite.binaries>false</overwrite.binaries>
+		<read.timeout>30000</read.timeout>
+		<connection.timeout>40000</connection.timeout>
+		<retry.attempts>4</retry.attempts>
+		<browser>firefox</browser>
+		<threads>1</threads>
+		<remote>false</remote>
+		<seleniumGridURL />
+		<platform />
+		<browserVersion />
+		<proxyEnabled>false</proxyEnabled>
+		<proxyHost />
+		<proxyPort />
+		<site.url>http://127.0.0.1:2368</site.url>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.16</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.zero.selenium</groupId>
+			<artifactId>core</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>selenium-tests</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<finalName>${final.name}</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${maven-surefire-plugin.version}</version>
+						<configuration>
+							<skipTests>true</skipTests>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>${maven-failsafe-plugin.version}</version>
+						<configuration>
+							<parallel>methods</parallel>
+							<threadCount>${threads}</threadCount>
+							<includes>
+								<include>**/Xo*.java</include>
+								<include>**/*Xo.java</include>
+								<include>**/*XoCase.java</include>
+							</includes>
+							<systemPropertyVariables>
+								<browser>${browser}</browser>
+								<screenshotDirectory>${project.build.directory}/screenshots</screenshotDirectory>
+								<remoteDriver>${remote}</remoteDriver>
+								<gridURL>${seleniumGridURL}</gridURL>
+								<desiredPlatform>${platform}</desiredPlatform>
+								<desiredBrowserVersion>${browserVersion}</desiredBrowserVersion>
+								<proxyEnabled>${proxyEnabled}</proxyEnabled>
+								<proxyHost>${proxyHost}</proxyHost>
+								<proxyPort>${proxyPort}</proxyPort>
+								<siteUrl>${site.url}</siteUrl>
+
+								<!--Set properties passed in by the driver binary downloader -->
+								<phantomjs.binary.path>${phantomjs.binary.path}</phantomjs.binary.path>
+								<webdriver.chrome.driver>${webdriver.chrome.driver}</webdriver.chrome.driver>
+								<webdriver.ie.driver>${webdriver.ie.driver}</webdriver.ie.driver>
+								<webdriver.opera.driver>${webdriver.opera.driver}</webdriver.opera.driver>
+								<webdriver.gecko.driver>${webdriver.gecko.driver}</webdriver.gecko.driver>
+								<webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
+							</systemPropertyVariables>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>integration-test</goal>
+									<!--This goal makes the build fail if you have test failures -->
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/libs</outputDirectory>
+									<overWriteReleases>false</overWriteReleases>
+									<overWriteSnapshots>false</overWriteSnapshots>
+									<overWriteIfNewer>true</overWriteIfNewer>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<configuration>
+							<archive>
+								<manifest>
+									<addClasspath>true</addClasspath>
+									<classpathPrefix>libs/</classpathPrefix>
+									<useUniqueVersions>false</useUniqueVersions>
+									<mainClass>com.zero.selenium.runner.TestRunner</mainClass>
+								</manifest>
+							</archive>
+							<excludes>
+								<exclude>testdata/**</exclude>
+								<exclude>selenium*/**</exclude>
+							</excludes>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>test-jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>initialize</phase>
+								<goals>
+									<goal>parse-version</goal>
+								</goals>
+								<id>readVersion</id>
+								<configuration>
+									<propertyPrefix>parsedVersion</propertyPrefix>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>3.0.0</version>
+						<configuration>
+							<finalName>${ghost.product.name}_${ghost.product.component}_${parsedVersion.majorVersion}_${parsedVersion.minorVersion}_${parsedVersion.incrementalVersion}+build.${build.number}</finalName>
+							<descriptors>
+								<descriptor>${project.basedir}/src/test/assembly/distribution.xml</descriptor>
+							</descriptors>
+							<appendAssemblyId>false</appendAssemblyId>
+						</configuration>
+						<executions>
+							<execution>
+								<id>make-assembly</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<copy todir="${project.build.directory}">
+											<fileset dir="${basedir}/src/test/resources">
+												<patternset id="data">
+													<include name="*.xml" />
+													<include name="*.properties" />
+													<include name="testdata/**" />
+												</patternset>
+											</fileset>
+										</copy>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

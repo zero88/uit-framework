@@ -1,0 +1,57 @@
+[
+	{
+		"name": "Create New Post Success With Upload Image",
+		"steps": [
+			{
+				"name": "Input Post Content",
+				"action": "inputPost",
+				"data": {
+					"content": "###Create New Post Success With Upload Image"
+				}
+			},
+			{
+				"name": "Update Post Settings",
+				"action": "updatePostSettings",
+				"data": {
+					"image_path": "testdata/workflow.png",
+					"Post URL": "",
+					"Publish Date": "",
+					"Tags": [
+						"Tag01",
+						"Tag02"
+					],
+					"Author": ""
+				}
+			},
+			{
+				"name": "Publish Post",
+				"action": "publishPost"
+			}
+		]
+	},
+	{
+		"name": "Create New Post Success With Use Image URL",
+		"steps": [
+			{
+				"name": "Input Post Content",
+				"action": "inputPost",
+				"data": {
+				}
+			},
+			{
+				"name": "Update Post Settings",
+				"action": "updatePostSettings",
+				"data": {
+					"image_url": "http://testingfreak.com/wp-content/uploads/2015/01/testng1.png",
+					"Post URL": "",
+					"Publish Date": "",
+					"Tags": [
+						"Tag01",
+						"Tag02"
+					],
+					"Author": ""
+				}
+			}
+		]
+	}
+]

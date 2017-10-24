@@ -1,0 +1,28 @@
+[
+	{
+		"name": "Update post",
+		"steps": [
+			{
+				"name": "Input Post Content",
+				"action": "inputPost",
+				"data": {
+					"title": "Zero v1",
+					"content": "###Zero remote fulltime contract"
+				}
+			},
+			{
+				"name": "Publish Post",
+				"action": "publishPost"
+			},
+			{
+				"name": "Update Post",
+				"action": "searchAndUpdatePost",
+				"data": {
+					"search": "Zero v1",
+					"title": "Zero v2",
+					"content": "###Zero remote fulltime contract - 40 hours/week - $15/hr"
+				}
+			}
+		]
+	}
+]
